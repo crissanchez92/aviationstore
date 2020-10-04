@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "aviationstore-dev"
+  },
+  "targets": {
+    "aviationstore-dev": {
+      "hosting": {
+        "client": [
+          "aviationstore-dev"
+        ]
+      }
+    }
   }
 }
