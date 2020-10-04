@@ -17,6 +17,7 @@ const Menu : React.FC<MenuProps> = (props) => {
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   <ButtonGroup vertical onClick={props.onCategoryChanged}>
+                    <Button value='0'>Todas</Button>
                     <Button value='1'>Gorras</Button>
                     <Button value='2'>LLaveros</Button>
                     <Button value='3'>Aviones</Button>

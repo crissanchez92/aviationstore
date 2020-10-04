@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { 
+import {
   Container,
   Row,
-  Col} from 'react-bootstrap';
-import {Product} from './models/Product';
+  Col
+} from 'react-bootstrap';
+import { Product } from './models/Product';
 import LeftMenu from './modules/LeftPanel/LeftMenu';
 import { TopMenu } from './modules/TopMenu/TopMenu';
 import { CenterPanel } from './modules/CenterPanel/CenterPanel';
@@ -15,15 +16,15 @@ function AviationStore() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  const [selectedType, setSelectedType] = useState<string|undefined>();
+  const [selectedType, setSelectedType] = useState<string | undefined>();
 
   const loadProducts = useCallback(() => {
     ProductsService.getProducts().then(theseProducts => setProducts(theseProducts));
   }, []);
 
-  const filterProducts = useCallback(() =>{
-    if(selectedType){
-      const fp = products.filter(p => p.type === selectedType);
+  const filterProducts = useCallback(() => {
+    if (selectedType) {
+      const fp = selectedType === 'Todas' ? products : products.filter(p => p.type === selectedType);
       setFilteredProducts(fp);
     }
   }, [selectedType, products]);
@@ -40,8 +41,11 @@ function AviationStore() {
     filterProducts();
   }, [filterProducts]);
 
-  function handleCategoryChanged(e: any){
-    switch(e.target.value){
+  function handleCategoryChanged(e: any) {
+    switch (e.target.value) {
+      case '0':
+        setSelectedType('Todas');
+        break;
       case '1':
         setSelectedType('Gorra');
         break;
@@ -77,10 +81,10 @@ function AviationStore() {
       <TopMenu />
       <Row>
         <Col xs={2} className="LeftPanel">
-          <LeftMenu onCategoryChanged={handleCategoryChanged}/>
+          <LeftMenu onCategoryChanged={handleCategoryChanged} />
         </Col>
         <Col xs={10} className="CenterPanel">
-          <CenterPanel products={filteredProducts}/>
+          <CenterPanel products={filteredProducts} />
         </Col>
       </Row>
     </Container>
