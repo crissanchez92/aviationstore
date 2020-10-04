@@ -1,43 +1,47 @@
 import { Product } from '../models/Product';
-import { ProductType } from '../models/ProductType';
+import { db } from '../modules/firebase/firebase'
 
 export class ProductsService {
 
-    static getProducts(type: ProductType | undefined = undefined): Product[] {
-        const gorras = this.GenerateProducts(ProductType.Gorra, 10);
-        const aviones = this.GenerateProducts(ProductType.Aviones, 8);
-        const llaveros = this.GenerateProducts(ProductType.Llaveros, 8);
-        const lamparas = this.GenerateProducts(ProductType.Lamparas, 8);
-        const lanyards = this.GenerateProducts(ProductType.Lanyards, 8);
-        const camisas = this.GenerateProducts(ProductType.Camisas, 8);
-        const accesorios = this.GenerateProducts(ProductType.Accesorios, 8);
-        const juguetes = this.GenerateProducts(ProductType.Juguetes, 8);
+    static async getProducts(type: string | undefined = undefined): Promise<Product[]> {
+        const snapshot = db.collection('products').get();
+        const docs = (await snapshot).docs.map(doc => doc.data()) as Product[];
+        return docs;
+
+        const gorras = this.GenerateProducts('Gorra', 10);
+        const aviones = this.GenerateProducts('Aviones', 8);
+        const llaveros = this.GenerateProducts('Llaveros', 8);
+        const lamparas = this.GenerateProducts('Lamparas', 8);
+        const lanyards = this.GenerateProducts('Lanyards', 8);
+        const camisas = this.GenerateProducts('Camisas', 8);
+        const accesorios = this.GenerateProducts('Accesorios', 8);
+        const juguetes = this.GenerateProducts('Juguetes', 8);
 
         let result: Product[] = [];
         
         switch(type){
-            case ProductType.Gorra:
+            case 'Gorra':
                 result = result.concat(gorras);
                 break;
-            case ProductType.Aviones:
+            case 'Aviones':
                 result = result.concat(aviones);
                 break;
-            case ProductType.Llaveros:
+            case 'Llaveros':
                 result = result.concat(llaveros);
                 break;
-            case ProductType.Lamparas:
+            case 'Lamparas':
                 result = result.concat(lamparas);
                 break;
-            case ProductType.Lanyards:
+            case 'Lanyards':
                 result = result.concat(lanyards);
                 break;
-            case ProductType.Camisas:
+            case 'Camisas':
                 result = result.concat(camisas);
                 break;
-            case ProductType.Accesorios:
+            case 'Accesorios':
                 result = result.concat(accesorios);
                 break;
-            case ProductType.Juguetes:
+            case 'Juguetes':
                 result = result.concat(juguetes);
                 break;
             default:
@@ -56,14 +60,14 @@ export class ProductsService {
         return result;
     }
 
-    static GenerateProducts(type: ProductType, count: number): Product[] {
+    private static GenerateProducts(type: string, count: number): Product[] {
         const randomProducts: Product[] = [];
         for(;count > 0; count--){
             randomProducts.push({
                 type: type,
-                name: `${ProductType[type]} ${count}`,
+                name: `${type} ${count}`,
                 price: this.randomIntFromInterval(100, 200),
-                details: `Detalles de producto ${ProductType[type]} ${count}. Materiales, dimensiones, etc`,
+                details: `Detalles de producto ${type} ${count}. Materiales, dimensiones, etc`,
                 imageSrc: 'https://i2.wp.com/www.reclamador.es/blog/wp-content/uploads/2018/05/abandonar-avion-antes-despegue-reclamador.jpg?fit=1200%2C800&ssl=1',
             })
         }

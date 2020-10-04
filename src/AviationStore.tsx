@@ -10,47 +10,61 @@ import LeftMenu from './modules/LeftPanel/LeftMenu';
 import { TopMenu } from './modules/TopMenu/TopMenu';
 import { CenterPanel } from './modules/CenterPanel/CenterPanel';
 import { ProductsService } from './services/ProductsService';
-import { ProductType } from './models/ProductType';
 
 function AviationStore() {
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedType, setSelectedType] = useState<ProductType|undefined>();
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [selectedType, setSelectedType] = useState<string|undefined>();
 
   const loadProducts = useCallback(() => {
-    const theseProducts: Product[] = ProductsService.getProducts(selectedType);
-    setProducts(theseProducts);
-  }, [selectedType]);
+    ProductsService.getProducts().then(theseProducts => setProducts(theseProducts));
+  }, []);
+
+  const filterProducts = useCallback(() =>{
+    if(selectedType){
+      const fp = products.filter(p => p.type === selectedType);
+      setFilteredProducts(fp);
+    }
+  }, [selectedType, products]);
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
 
   useEffect(() => {
     loadProducts();
-  }, [loadProducts, selectedType]);
+  }, [loadProducts]);
+
+  useEffect(() => {
+    filterProducts();
+  }, [filterProducts]);
 
   function handleCategoryChanged(e: any){
     switch(e.target.value){
       case '1':
-        setSelectedType(ProductType.Gorra);
+        setSelectedType('Gorra');
         break;
       case '2':
-        setSelectedType(ProductType.Llaveros);
+        setSelectedType('Llaveros');
         break;
       case '3':
-        setSelectedType(ProductType.Aviones);
+        setSelectedType('Aviones');
         break;
       case '4':
-        setSelectedType(ProductType.Lanyards);
+        setSelectedType('Lanyards');
         break;
       case '5':
-        setSelectedType(ProductType.Lanyards);
+        setSelectedType('Lanyards');
         break;
       case '6':
-        setSelectedType(ProductType.Camisas);
+        setSelectedType('Camisas');
         break;
       case '7':
-        setSelectedType(ProductType.Accesorios);
+        setSelectedType('Accesorios');
         break;
       case '8':
-        setSelectedType(ProductType.Juguetes);
+        setSelectedType('Juguetes');
         break;
       default:
         alert('Action not registered');
@@ -66,7 +80,7 @@ function AviationStore() {
           <LeftMenu onCategoryChanged={handleCategoryChanged}/>
         </Col>
         <Col xs={10} className="CenterPanel">
-          <CenterPanel products={products}/>
+          <CenterPanel products={filteredProducts}/>
         </Col>
       </Row>
     </Container>

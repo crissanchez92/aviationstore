@@ -10,9 +10,10 @@ interface CenterPanelProps {
 export const CenterPanel: React.FC<CenterPanelProps> = (props) => {
     return (
         <CardColumns>
-            {props.products.map((product: Product) => {
+            {props.products.map((product: Product, index: number) => {
                 return(
                     <ItemCard 
+                        key={index}
                         imageSrc={product.imageSrc} 
                         title={product.name}
                         text={product.details}/>
