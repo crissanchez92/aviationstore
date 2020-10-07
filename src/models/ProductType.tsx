@@ -1,10 +1,4 @@
-export enum ProductType {
-    Gorra,
-    Llaveros,
-    Aviones,
-    Lamparas,
-    Lanyards,
-    Camisas,
-    Accesorios,
-    Juguetes
+export interface ProductType{
+    name: string;
+    details: string;
 }

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Accordion, Card, Button, ButtonGroup } from 'react-bootstrap';
+import { ProductType } from '../../models/ProductType';
 
 interface MenuProps{
-    onCategoryChanged: (e: any) => void
+    onCategoryChanged: (e: any) => void,
+    productTypes: ProductType[]
 }
 
 const Menu : React.FC<MenuProps> = (props) => {
@@ -17,15 +19,12 @@ const Menu : React.FC<MenuProps> = (props) => {
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   <ButtonGroup vertical onClick={props.onCategoryChanged}>
-                    <Button value='0'>Todas</Button>
-                    <Button value='1'>Gorras</Button>
-                    <Button value='2'>LLaveros</Button>
-                    <Button value='3'>Aviones</Button>
-                    <Button value='4'>Lámparas</Button>
-                    <Button value='5'>Lanyards</Button>
-                    <Button value='6'>Camisas</Button>
-                    <Button value='7'>Accesorios</Button>
-                    <Button value='8'>Juguetes</Button>
+                    <Button value='Todas'>Todas</Button>
+                    {props.productTypes.map(productType => {
+                      return(
+                        <Button key={productType.name} value={productType.name}>{productType.name}</Button>
+                      )
+                    })}
                   </ButtonGroup>
                 </Card.Body>
               </Accordion.Collapse>

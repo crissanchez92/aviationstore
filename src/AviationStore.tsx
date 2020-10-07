@@ -11,8 +11,22 @@ import LeftMenu from './modules/LeftPanel/LeftMenu';
 import { TopMenu } from './modules/TopMenu/TopMenu';
 import { CenterPanel } from './modules/CenterPanel/CenterPanel';
 import { ProductsService } from './services/ProductsService';
+import { ProductType } from './models/ProductType';
 
 function AviationStore() {
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1200)
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      const ismobile = window.innerWidth < 1200;
+      if (ismobile !== isMobile) setIsMobile(ismobile);
+  }, false);
+  }, [isMobile]);
+
+  const [productTypes, setProductTypes] = useState<ProductType[]>([]);
+  useEffect(() => {
+    ProductsService.getProductTypes().then(theProductTypes => setProductTypes(theProductTypes));
+  });
 
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
@@ -42,48 +56,20 @@ function AviationStore() {
   }, [filterProducts]);
 
   function handleCategoryChanged(e: any) {
-    switch (e.target.value) {
-      case '0':
-        setSelectedType('Todas');
-        break;
-      case '1':
-        setSelectedType('Gorra');
-        break;
-      case '2':
-        setSelectedType('Llaveros');
-        break;
-      case '3':
-        setSelectedType('Aviones');
-        break;
-      case '4':
-        setSelectedType('Lanyards');
-        break;
-      case '5':
-        setSelectedType('Lanyards');
-        break;
-      case '6':
-        setSelectedType('Camisas');
-        break;
-      case '7':
-        setSelectedType('Accesorios');
-        break;
-      case '8':
-        setSelectedType('Juguetes');
-        break;
-      default:
-        alert('Action not registered');
-        break;
-    }
+    setSelectedType(e.target.value);
   }
+
+  const leftMenuXs = isMobile ? undefined : 2;
+  const centerMenuXs = isMobile ? undefined : 10;
 
   return (
     <Container className="Container">
       <TopMenu />
       <Row>
-        <Col xs={2} className="LeftPanel">
-          <LeftMenu onCategoryChanged={handleCategoryChanged} />
+        <Col xs={leftMenuXs} className="LeftPanel">
+          <LeftMenu onCategoryChanged={handleCategoryChanged} productTypes={productTypes} />
         </Col>
-        <Col xs={10} className="CenterPanel">
+        <Col xs={centerMenuXs} className="CenterPanel">
           <CenterPanel products={filteredProducts} />
         </Col>
       </Row>

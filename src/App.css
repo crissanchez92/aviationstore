@@ -56,3 +56,7 @@
   background-color: white;
   color: black;
 }
+
+.contentCentered {
+  align-content: center;
+}
